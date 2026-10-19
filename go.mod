@@ -2,7 +2,7 @@ module github.com/steipete/canvas
 
 go 1.26
 
-toolchain go1.26.8
+toolchain go1.26.9
 
 require (
 	github.com/chromedp/cdproto v0.0.0-20260804232424-e85f50dbfd32

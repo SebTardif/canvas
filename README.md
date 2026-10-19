@@ -24,7 +24,7 @@ canvas --version
 
 Prebuilt archives for macOS and Linux (arm64 and amd64) and `checksums.txt` are available on the [GitHub Releases page](https://github.com/steipete/canvas/releases). macOS binaries are Developer ID signed and notarized. Building from source requires the Go toolchain described below.
 
-Requires Go 1.26+. The preferred build toolchain is Go 1.26.8, selected by `go.mod` when a newer Go version is not already installed and toolchain downloads are enabled. Release builds use Go 1.26.8 to retain macOS 12 compatibility; Go 1.27 builds require macOS 13 or later.
+Requires Go 1.26+. The preferred build toolchain is Go 1.26.9, selected by `go.mod` when a newer Go version is not already installed and toolchain downloads are enabled. Release builds use Go 1.26.9 to retain macOS 12 compatibility; Go 1.27 builds require macOS 13 or later.
 
 Build:
 
@@ -35,7 +35,7 @@ go build ./cmd/canvas
 To build for macOS 12 even when a newer Go version is installed:
 
 ```sh
-GOTOOLCHAIN=go1.26.8 go build ./cmd/canvas
+GOTOOLCHAIN=go1.26.9 go build ./cmd/canvas
 ```
 
 Version stamping (optional):
@@ -46,7 +46,7 @@ go build -ldflags "-X github.com/steipete/canvas/internal/cmd.version=$(git rev-
 
 For the release procedure, see [RELEASING.md](RELEASING.md).
 
-Run the unit tests with `go test ./...`. On macOS with Chrome or Chromium installed, run `go test -race -tags=integration ./internal/browser` for the browser integration tests. CI runs both using Go 1.27.1; release builds use the compatible Go 1.26 toolchain from `go.mod`.
+Run the unit tests with `go test ./...`. On macOS with Chrome or Chromium installed, run `go test -race -tags=integration ./internal/browser` for the browser integration tests. CI runs both using Go 1.27.2 on `xcode-27`; release builds use the compatible Go 1.26 toolchain from `go.mod`. CI also checks the macOS 12 minimum and runs Intel release binaries under Rosetta.
 
 On Linux, install Chromium (on Omarchy: `omarchy pkg add chromium`). Canvas detects Chromium, Chrome, Brave, and Edge executables on `PATH`; use `--browser-bin` to select another installation. `canvas focus` supports Hyprland 0.55+ through its Lua dispatch API. Other Linux compositors can use headless mode or their window manager to focus the browser.
 

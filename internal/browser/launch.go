@@ -179,14 +179,19 @@ func waitProcess(cmd *exec.Cmd, timeout time.Duration) error {
 	if cmd == nil || cmd.Process == nil {
 		return nil
 	}
-	done := make(chan error, 1)
-	go func() { done <- cmd.Wait() }()
+	done := make(chan struct{})
+	var waitErr error
+	go func() {
+		waitErr = cmd.Wait()
+		close(done)
+	}()
 
 	select {
-	case err := <-done:
-		return err
+	case <-done:
+		return waitErr
 	case <-time.After(timeout):
 		_ = cmd.Process.Kill()
+		// Reap the killed process while preserving the timeout error.
 		<-done
 		return context.DeadlineExceeded
 	}
