@@ -5,7 +5,9 @@ Canvas uses the GoReleaser-based shared release pipeline also used by
 archives for macOS and Linux on arm64 and amd64, with `README.md` and `LICENSE`,
 plus `checksums.txt` and verification manifests. The macOS binaries are signed
 with Peter Steinberger’s Developer ID and notarized. Release builds use the
-Go 1.26.8 toolchain in `go.mod` to retain macOS 12 support.
+Go 1.26.9 toolchain in `go.mod` to retain macOS 12 support.
+
+The release workflow defaults to `dry_run: true`. Dispatch it on `main` with the current version to build, sign, and independently verify without creating a tag or publishing a release. Publishing requires explicitly setting `dry_run: false`.
 
 ## Repository setup
 
@@ -36,8 +38,8 @@ Go 1.26.8 toolchain in `go.mod` to retain macOS 12 support.
    golangci-lint run --timeout=5m
    actionlint
    goreleaser check
-   GOTOOLCHAIN=go1.26.8 go test ./...
-   GOTOOLCHAIN=go1.26.8 goreleaser build --snapshot --clean
+   GOTOOLCHAIN=go1.26.9 go test ./...
+   GOTOOLCHAIN=go1.26.9 goreleaser build --snapshot --clean
    ```
 
 4. Wait for all CI checks on the exact merged `main` commit to pass. Recheck
@@ -47,7 +49,7 @@ Go 1.26.8 toolchain in `go.mod` to retain macOS 12 support.
    git tag -s v0.1.0 -m "canvas 0.1.0"
    git -c gpg.ssh.allowedSignersFile=.github/release-allowed-signers verify-tag v0.1.0
    git push origin v0.1.0
-   gh workflow run release.yml --ref main -f version=0.1.0
+   gh workflow run release.yml --ref main -f version=0.1.0 -f dry_run=false
    ```
 
    Substitute the requested version for subsequent releases. Tag pushes do not
